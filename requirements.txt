@@ -1,0 +1,9 @@
+transformers>=4.48.0
+accelerate
+datasets
+torch
+pandas
+tqdm
+rouge-score
+pillow
+gguf>=0.10.0
