@@ -1,25 +1,3 @@
-# %% [markdown]
-# # Qwen3 Evaluation on VMLU + Vietnamese SQuAD
-# 
-# Evaluates **Qwen/Qwen3-8B** (text-only, no vision encoder) on two Vietnamese benchmarks:
-# 
-# | Dataset | Task | Metric |
-# |---|---|---|
-# | **VMLU Vi-MQA** | Multiple-choice QA — 58 subjects | Accuracy |
-# | **Vietnamese SQuAD** | Extractive reading comprehension | Exact Match & F1 |
-# 
-# **Key settings:**
-# - Model loaded in `bfloat16` with `device_map="auto"` 
-# - `enable_thinking=False` — thinking chain suppressed, model outputs answers directly
-# - Debug cells print the full prompt, raw model output, and extracted answer for the first 3 samples of each dataset
-
-# %%
-%%capture
-!pip uninstall -y transformers
-!pip install -q "transformers>=4.48.0"
-!pip install -q accelerate datasets pillow
-!pip install -q gguf>=0.10.0
-
 # %%
 import torch
 from transformers import AutoModelForImageTextToText, AutoProcessor
@@ -131,26 +109,7 @@ print("VMLU helpers ready.")
 
 # %%
 tokenizer = processor.tokenizer
-"""
-print("  VMLU DEBUG PREVIEW (first 3 samples)")
 
-for idx, sample in enumerate(vmlu_dataset.select(range(3))):
-    print(f"\n>>> Sample {idx+1} / ID: {sample['id']}")
-    print(f"    Question : {sample['question']}")
-    print(f"    Choices  : {sample['choices']}")
-    print(f"    Gold ans : {sample.get('answer', 'N/A')}")
-
-    messages = build_vmlu_messages(sample["question"], sample["choices"])
-    _, raw_output = generate_response(messages, max_new_tokens=8, debug=True)
-
-    predicted = extract_mcq_answer(raw_output)
-    print(f"    Extracted answer  : {predicted}")
-    correct = (predicted == sample.get("answer", ""))
-    print(f"    Correct?          : {'YES' if correct else 'NO'}")
-    print("-" * 70)
-"""
-
-# %%
 import pandas as pd
 from tqdm.auto import tqdm
 
